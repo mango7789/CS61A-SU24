@@ -7,6 +7,8 @@
   If you edit the Python file while running it interactively, you will need to exit and restart the interpreter in order for those changes to take effect.
   - `-m doctest`: Runs the doctests in a file, which are the examples in the docstrings of functions.   
   Each test in the file consists of `>>>` followed by some Python code and the expected output.
+- Lab01
+- Lab02
 
 ### Homework
 
