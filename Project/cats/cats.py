@@ -162,6 +162,13 @@ def memo_diff(diff_function):
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
+        pair_tuple = (typed, source)
+        if pair_tuple in cache:
+            if cache[pair_tuple][1] >= limit:
+                return cache[pair_tuple][0]
+        new_result = diff_function(typed, source, limit)
+        cache[pair_tuple] = (new_result, limit)
+        return new_result
         # END PROBLEM EC
 
     return memoized
@@ -172,6 +179,7 @@ def memo_diff(diff_function):
 ###########
 
 
+@memo
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -247,6 +255,7 @@ def furry_fixes(typed, source, limit):
     # END PROBLEM 6
 
 
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -329,6 +338,14 @@ def report_progress(typed, source, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    count = 0
+    for i in range(len(typed)):
+        if typed[i] != source[i]:
+            break
+        count += 1
+    progress = count / len(source)
+    upload({'id': user_id, 'progress': progress})
+    return progress
     # END PROBLEM 8
 
 
@@ -352,6 +369,13 @@ def time_per_word(words, timestamps_per_player):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    times = []
+    for timestamps_each in timestamps_per_player:
+        curr_time_interval = []
+        for i in range(1, len(timestamps_each)):
+            curr_time_interval.append(timestamps_each[i] - timestamps_each[i - 1])
+        times.append(curr_time_interval)
+    return words, times
     # END PROBLEM 9
 
 
@@ -373,6 +397,8 @@ def time_per_word_match(words, timestamps_per_player):
     """
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    words, times = time_per_word(words, timestamps_per_player)
+    return match(words, times)
     # END PROBLEM 10
 
 
@@ -395,6 +421,17 @@ def fastest_words(match_object):
     word_indices = range(len(get_all_words(match_object)))  # contains an *index* for each word
     # BEGIN PROBLEM 11
     "*** YOUR CODE HERE ***"
+    fastest_words = [[] for _ in player_indices]
+    for word_index in word_indices:
+        fastest_time = float("inf")
+        fastest_player = -1
+        for player_index in player_indices:
+            player_typed_time = get_time(match_object, player_index, word_index)
+            if player_typed_time < fastest_time:
+                fastest_time = player_typed_time
+                fastest_player = player_index
+        fastest_words[fastest_player].append(get_word(match_object, word_index))
+    return fastest_words
     # END PROBLEM 11
 
 
