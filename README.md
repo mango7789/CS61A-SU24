@@ -11,12 +11,15 @@
 - Lab 02
 - Lab 03
 - Lab 04
+- Lab 05
+- Lab 06
 
 ### Homework
 
 - HW 01
 - HW 02
-
+- HW 03
+- HW 04
 
 ### Project
 
