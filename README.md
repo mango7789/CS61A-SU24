@@ -13,6 +13,7 @@
 - Lab 04
 - Lab 05
 - Lab 06
+- Lab 07
 
 ### Homework
 
@@ -25,3 +26,4 @@
 
 - Hog
 - Cats
+- Ants
