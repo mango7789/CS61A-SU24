@@ -491,25 +491,19 @@ class SlowThrower(ThrowerAnt):
     def throw_at(self, target):
         # BEGIN Problem EC 1
         "*** YOUR CODE HERE ***"
-        def bee_action(gamestate):
+        def slower_action(gamestate):
+            target.slower_step()
+            # conditional execute
             if gamestate.time % 2 == 0:
-                destination = target.place.exit
-                if target.blocked():
-                    target.sting(target.place.ant)
-                elif target.health > 0 and destination is not None:
-                    target.move_to(destination)
-            else:
-                pass
+                original_action(gamestate)
+            # back to original action
+            if target.slower_round == 0:
+                target.action = original_action
         
-        def slower_action(count):
-            if count > 0:
-                count -= 1
-                target.action = bee_action
-            else:
-                target.action = Bee.action
-                
         if target is not None:
-            target.action = slower_action(self.slower_turn)
+            target.slower_set(self.slower_turn)
+            original_action = target.action
+            target.action = slower_action
         # END Problem EC 1
 
 
@@ -519,12 +513,14 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     food_cost = 6
     # BEGIN Problem EC 2
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    scare_turn = 2
     # END Problem EC 2
 
     def throw_at(self, target):
         # BEGIN Problem EC 2
         "*** YOUR CODE HERE ***"
+        target.scare(self.scare_turn)
         # END Problem EC 2
 
 
@@ -606,6 +602,14 @@ class Bee(Insect):
         return self.place.ant is not None
         # END Problem EC 3
 
+    def slower_set(self, rounds):
+        self.slower_round = rounds
+
+    def slower_step(self):
+        if self.slower_round > 0:
+            self.slower_round -= 1
+            
+    
     def action(self, gamestate):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
         or moves to the exit of its current place otherwise.
@@ -613,8 +617,14 @@ class Bee(Insect):
         gamestate -- The GameState, used to access game state information.
         """
         destination = self.place.exit
-
-
+        if hasattr(self, "scare_round"):
+            if self.scare_round > 0:
+                self.scare_round -= 1
+                # check next place is not hive
+                if not self.place.entrance.is_hive:
+                    destination = self.place.entrance
+                else:
+                    destination = self.place
         if self.blocked():
             self.sting(self.place.ant)
         elif self.health > 0 and destination is not None:
@@ -622,7 +632,7 @@ class Bee(Insect):
 
     def add_to(self, place):
         place.bees.append(self)
-        super().add_to( place)
+        super().add_to(place)
 
     def remove_from(self, place):
         place.bees.remove(self)
@@ -635,6 +645,9 @@ class Bee(Insect):
         """
         # BEGIN Problem EC 2
         "*** YOUR CODE HERE ***"
+        if not hasattr(self, "is_scared"):
+            self.scare_round = length
+            self.is_scared = True
         # END Problem EC 2
 
 
