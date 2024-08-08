@@ -14,6 +14,8 @@
 - Lab 05
 - Lab 06
 - Lab 07
+- Lab 08
+- Lab 09
 
 ### Homework
 
