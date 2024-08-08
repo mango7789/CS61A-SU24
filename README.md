@@ -15,7 +15,7 @@
 - Lab 06
 - Lab 07
 - Lab 08
-- Lab 09
+- Lab 09: Scheme
 
 ### Homework
 
